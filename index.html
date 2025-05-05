@@ -7,19 +7,60 @@
     <title>Independent</title>
 </head>
 <body>
+    <div id="pageLoader">
+        <div class="loader"></div>
+    </div>
     <section style="padding:40px 40px 0px 40px;width:100%;">
-        <span class="h1">Welcome to Independent</span>
+        <span class="h1">Welcome to <i>Independent</i></span>
         <span class="seperator"></span>
     </section>
-    <section style="padding:20px 40px 0px 40px">
-        <div class="outlinedbox">
+    <section style="padding:20px 40px 0px 40px;display:flex;flex-flow:column;align-items: center;">
+        <div class="outlinedbox limwi minwi" style="display:flex;flex-flow:column;" id="initial">
             <span class="h2">There's no profile on this session.</span>
-            <div class="buttonrow" style="margin-top:10px;">
-                <button onclick="newProfile()">New profile</button>
-                <button onclick="loadFile()">Load profile</button>
+            <div class="buttonrow" style="margin-top:10px;justify-content: end;">
+                <button onclick="this.parentElement.parentElement.style.display = 'none';document.getElementById('createProfile').style.display = 'flex'">New profile</button>
+                <button onclick="this.parentElement.parentElement.style.display = 'none';document.getElementById('uploadProfile').style.display = 'flex'">Load profile</button>
+            </div>
+        </div>
+        <div class="outlinedbox limwi minwi" style="display:none;flex-flow:column;" id="createProfile">
+            <span class="h2">Create profile</span>
+            <div class="col" style="margin-top:10px;">
+                <span class="h3">First name</span>
+                <input type="text">
+            </div>
+            <div class="col" style="margin-top:10px;">
+                <span class="h3">Profile name</span>
+                <input type="text">
+            </div>
+            <div class="buttonrow" style="margin-top:10px;justify-content: space-between;">
+                <button onclick="this.parentElement.parentElement.children[1].children[1].value='';parentElement.parentElement.children[2].children[1].value='';this.parentElement.parentElement.style.display='none';document.getElementById('initial').style.display='flex'" class="secondary">Back</button>
+                <button onclick="newProfile(this.parentElement.parentElement.children[1].children[1].value,parentElement.parentElement.children[2].children[1].value)">Create</button>
+            </div>
+        </div>
+        <div class="outlinedbox limwi minwi" style="display:none;">
+            <span class="h2">Load profile</span>
+            <div class="col" style="margin-top:10px;">
+                <input type="text" disabled>
+            </div>
+            <div class="buttonrow" style="margin-top:10px;justify-content: space-between;">
+                <button onclick="exitLoad()" class="secondary">Back</button>
+                <button onclick="createProfile()">Load</button>
+            </div>
+        </div>
+        <div class="outlinedbox limwi minwi" style="display:none;flex-flow:column;" id="uploadProfile">
+            <span class="h2">Upload profile</span>
+            
+            <div class="row" style="justify-content: center;padding:20px 0px;display:none;" id="uploaderloader">
+                <div class="loader"></div>
+            </div>
+            <span class="clickable" onclick="uploadProfile()" id="choosefilebutton">Choose File</span>
+            <div class="buttonrow" style="margin-top:10px;justify-content: start;">
+
+                <button class="secondary" onclick="this.parentElement.parentElement.style.display='none';document.getElementById('initial').style.display='flex'">Back</button>
             </div>
         </div>
     </section>
     <script src="./assets/main.js"></script>
+    <script>setupLanding()</script>
 </body>
 </html>
