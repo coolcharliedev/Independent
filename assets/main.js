@@ -90,6 +90,15 @@ async function deleteMainLoader(){
     document.getElementById("pageLoader").remove()
 }
 
+const tools = [
+    {
+        icon:"protocols.png",
+        name:"Protocols",
+        url:"protocols",
+        desc: "Create, edit, and use programmed lists of tasks"
+    }
+]
+
 async function setupDash(){
     profile = await getProfile()
 
@@ -99,7 +108,7 @@ async function setupDash(){
     }
 
     date = new Date()
-    deleteMainLoader()
+    
 
     if(date.getHours() < 12){
         document.getElementById('userGreetingTime').innerHTML = "morning"
@@ -112,6 +121,44 @@ async function setupDash(){
     await loadCalendar(document.getElementById('pageCal'))
 
     document.getElementById('userGreetingName').innerHTML = profile.username
+
+    list = document.getElementById('toolList')
+
+    i = 0
+    while(i<tools.length){
+        newtool = document.createElement("div")
+        newtool.setAttribute("tabindex","0")
+        newtool.classList.add("toollisted")
+        newtool.classList.add("limwi")
+        
+
+        newicon = document.createElement("img")
+        newicon.src = `./../assets/icons/${tools[i].icon}`
+        newicon.style.borderRadius = "20px"
+        newicon.height = "100"
+        newicon.width = "100"
+
+        infobar = document.createElement("div")
+        infobar.classList.add("col")
+
+        tooltitle = document.createElement("span")
+        tooltitle.classList.add("h2")
+        tooltitle.innerHTML = tools[i].name
+
+        tooldesc = document.createElement("p")
+        tooldesc.innerHTML = tools[i].desc
+
+        infobar.appendChild(tooltitle)
+        infobar.appendChild(tooldesc)
+
+        newtool.appendChild(newicon)
+        newtool.appendChild(infobar)
+
+        list.appendChild(newtool)
+        i++
+    }
+
+    deleteMainLoader()
 }
 
 async function loadCalendar(element){

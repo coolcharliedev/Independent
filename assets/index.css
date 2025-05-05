@@ -30,6 +30,7 @@
     --secondary-dep2:rgb(60, 60, 205);
 
     --secondary-bg:rgb(39, 39, 39);
+    --secondary-bg-dep1:rgb(29, 29, 29);
 
     --tertiary-bg:rgb(63, 63, 63);
     --tertiary-dep1:rgb(53, 53, 53);
@@ -181,7 +182,7 @@ input{
 
 .calendar > div{
     width:100%;
-    border-left:1px var(--main-cnt-color) solid;
+    border-left:2px var(--main-cnt-color) solid;
     padding:0px 20px;
     margin:20px 0px;
     align-items: start;
@@ -200,4 +201,24 @@ input{
     top:0;
     left:0;
     background-color: var(--main-bg-color);
+}
+
+.toollisted{
+    border-radius:30px;
+    padding:15px;
+    background-color: var(--secondary-bg);
+    display:flex;
+    flex-flow:row;
+    gap:10px;
+}
+
+.toollisted:hover{
+    background-color: var(--secondary-bg-dep1);
+    cursor:pointer
+}
+
+p{
+    font-family: "Lato", sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
