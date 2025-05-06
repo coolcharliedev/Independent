@@ -111,6 +111,12 @@ const tools = [
         name:"Protocols",
         url:"protocols",
         desc: "Create, edit, and use programmed lists of tasks"
+    },
+    {
+        icon:"learning.png",
+        name:"Learning",
+        url:"learning",
+        desc: "Track your progress in learning programmable courses"
     }
 ]
 
@@ -170,6 +176,8 @@ async function setupDash(){
         newtool.appendChild(infobar)
 
         list.appendChild(newtool)
+
+        newtool.setAttribute('onclick', `location = './../tools/${tools[i].url}'`)
         i++
     }
 
