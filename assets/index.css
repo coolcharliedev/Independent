@@ -112,6 +112,14 @@ body{
     cursor:pointer;
 }
 
+.buttonrow > button.danger{
+    background-color:rgb(255, 90, 90);  
+}
+
+.buttonrow > button.danger:hover{
+    background-color:rgb(235, 70, 70);  
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {
     width: 60px;
@@ -203,6 +211,18 @@ input{
     background-color: var(--main-bg-color);
 }
 
+#dataSaveWindow{
+    width:100vw;
+    display:none;
+    height:100vh;
+    justify-content: center;
+    align-items: center;
+    position:fixed;
+    top:0;
+    left:0;
+    background-color: var(--main-bg-color);
+}
+
 .toollisted{
     border-radius:30px;
     padding:15px;
@@ -210,6 +230,7 @@ input{
     display:flex;
     flex-flow:row;
     gap:10px;
+    transition:0.2s;
 }
 
 .toollisted:hover{
@@ -221,4 +242,36 @@ p{
     font-family: "Lato", sans-serif;
     font-weight: 500;
     font-style: normal;
+}
+
+.saveStatus{
+    background-color:var(--secondary-bg);
+    color:var(--main-cnt-color);
+    padding:8px;
+    border-radius:20px;
+    display:flex;
+    flex-flow:row;
+    align-items: center;
+    gap:5px;
+    cursor:pointer;
+}
+
+.saveStatus:hover{
+    text-decoration: underline;
+}
+
+.saveStatusIndicator{
+    display:block;
+    background-color: var(--secondary-bg);
+    height:8px;
+    width:8px;
+    border-radius: 50%;
+}
+
+.saveStatusIndicator.notsaved{
+    background-color: rgb(255, 90, 90);
+}
+
+.saveStatusIndicator.saved{
+    background-color: rgb(96, 255, 82);
 }

@@ -37,14 +37,14 @@
                 <button onclick="newProfile(this.parentElement.parentElement.children[1].children[1].value,parentElement.parentElement.children[2].children[1].value)">Create</button>
             </div>
         </div>
-        <div class="outlinedbox limwi minwi" style="display:none;">
+        <div class="outlinedbox limwi minwi" style="display:none;flex-flow:column" id="loadprofile">
             <span class="h2">Load profile</span>
             <div class="col" style="margin-top:10px;">
-                <input type="text" disabled>
+                <input type="text" disabled id="profileName">
             </div>
             <div class="buttonrow" style="margin-top:10px;justify-content: space-between;">
-                <button onclick="exitLoad()" class="secondary">Back</button>
-                <button onclick="createProfile()">Load</button>
+                <button onclick="this.parentElement.parentElement.style.display = 'none';document.getElementById('uploadProfile').style.display = 'flex'" class="secondary">Back</button>
+                <button onclick="loadProfile()">Load</button>
             </div>
         </div>
         <div class="outlinedbox limwi minwi" style="display:none;flex-flow:column;" id="uploadProfile">

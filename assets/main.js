@@ -1,6 +1,8 @@
 async function setProfile(data){
     if(!data["username"] || !data["name"] || !data["lastBackedUp"] || !data["data"]) throw new Error("Invalid Profile Data")
 
+    data.lastEdited = new Date().getTime()
+
     data = JSON.stringify(data)
 
     localStorage.setItem('independentProfile',data)
@@ -31,6 +33,7 @@ async function newProfile(username, profilename){
         username: username,
         name: profilename,
         lastBackedUp: -1,
+        lastEdited:new Date().getTime(),
         data:{}
     }
 
@@ -63,7 +66,8 @@ async function uploadProfile(){
     let data
 
     try{
-        data = JSON.parse(text);
+        data = JSON.parse(text)
+        console.log(data)
     }catch(err){
         document.getElementById('uploaderloader').style.display = "none"
         document.getElementById('choosefilebutton').style.display = "block"
@@ -71,7 +75,7 @@ async function uploadProfile(){
         return userAlert("DANGER","An error occurred. Your file is invalid.")
     }
     
-    if(!data["backupInfo"] || !data["currentFile"] || !data["lastBackedUp"]){
+    if(!data["backupInfo"] || !data["lastBackedUp"]){
         document.getElementById('uploaderloader').style.display = "none"
         document.getElementById('choosefilebutton').style.display = "block"
         userAlert("DANGER","An error occurred. Your file is invalid.")
@@ -79,6 +83,17 @@ async function uploadProfile(){
     }
 
     document.getElementById('uploadProfile').style.display = "flex"
+
+    localStorage.setItem('tempIndptProfileData',JSON.stringify(data))
+
+    document.getElementById("uploadProfile").style.display = "none"
+
+    document.getElementById('uploaderloader').style.display = "none"
+    document.getElementById('choosefilebutton').style.display = "block"
+
+    document.getElementById('loadprofile').style.display = "flex"
+
+    document.getElementById('profileName').value = data["backupInfo"]["name"]
 }
 
 
@@ -158,7 +173,112 @@ async function setupDash(){
         i++
     }
 
+    
+
+    displayBackupStatus()
+
     deleteMainLoader()
+}
+
+async function displayBackupStatus(){
+    profile = await getProfile()
+    if(profile.lastEdited > profile.lastBackedUp){
+        console.log(profile.lastEdited, profile.lastBackedUp)
+        document.getElementsByClassName("saveStatus")[0].children[0].innerHTML = "Saved in browser"
+        document.getElementsByClassName("saveStatus")[0].children[1].classList.add('notsaved')
+    }else{
+        document.getElementsByClassName("saveStatus")[0].children[0].innerHTML = "Backed up"
+        document.getElementsByClassName("saveStatus")[0].children[1].classList.add('saved')
+    }
+    return
+}
+
+async function loadProfile(){
+    data = window.localStorage.getItem('tempIndptProfileData')
+
+    data = JSON.parse(data)
+
+    await setProfile(data.backupInfo)
+
+    window.localStorage.removeItem('tempIndptProfileData')
+
+    location = "./dashboard"
+}
+
+async function createFile(){
+    const options = {
+        types: [{
+            description: 'Independent Profile File',
+            accept: {'application/indp': ['.indpt']},
+        }],
+    };
+    
+    date = new Date().getTime()
+
+    profile = await getProfile()
+
+
+    profile.lastBackedUp = date
+
+    data = {
+        backupInfo:profile,
+        lastBackedUp:date,
+    }
+
+    localStorage.setItem("independentProfile",JSON.stringify(profile))
+    
+
+    const handle = await window.showSaveFilePicker(options);
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(data));
+    await writable.close();
+
+    displayBackupStatus()
+    openDataWindow()
+      
+}
+
+async function writeBackup(){
+    try{
+        var [handle] = await window.showOpenFilePicker({
+            types: [{
+                description: 'Independent Profile File',
+                accept: {'application/indp': ['.indpt']},
+            }],
+        });
+    }catch(err){
+        return
+    }
+    
+
+    date = new Date().getTime()
+
+    profile = await getProfile()
+
+
+    profile.lastBackedUp = date
+
+    data = {
+        backupInfo:profile,
+        lastBackedUp:date,
+    }
+
+    localStorage.setItem("independentProfile",JSON.stringify(profile))
+    
+
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(data));
+    await writable.close();
+
+    displayBackupStatus()
+    openDataWindow()
+}
+
+async function openDataWindow(){
+    profile = await getProfile()
+
+    document.getElementById('lastbackedup').innerHTML = `Last backed up: ${new Date(profile.lastBackedUp).toLocaleString()}`
+    document.getElementById("dataSaveWindow").style.display="flex"
 }
 
 async function loadCalendar(element){

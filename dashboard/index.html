@@ -4,14 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./../assets/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close" />
+    <style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        </style>
     <title>Independent</title>
 </head>
 <body>
+    <div id="dataSaveWindow">
+        <div class="outlinedbox limwi minwi" style="display:flex;flex-flow:column;" id="initial">
+            <div class="row" style="align-items: center;justify-content: space-between;">
+                <span class="h2">Profile Backup</span>
+                <span class="h2 clickable" onclick="this.parentElement.parentElement.parentElement.style.display = 'none'" style="display:flex;align-items: center;text-decoration: none;"><span class="material-symbols-outlined">close</span></span>
+            </div>
+            <p id="lastbackedup"></p>
+            <div class="buttonrow" style="margin-top:10px;justify-content: space-between;">
+                <button class="danger" onclick="if(confirm('This will delete all data associated with this profile. Continue?')){window.localStorage.removeItem('independentProfile');location.reload()}">Remove Profile</button>
+                <div class="buttonrow">
+                    <button onclick="writeBackup()">Write to existing file</button>
+                    <button onclick="createFile()">Download new file</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
     <div id="pageLoader">
         <div class="loader"></div>
     </div>
     <section style="padding:40px 40px 0px 40px;width:100%;">
-        <span class="h1">Good <span id="userGreetingTime"></span>, <i><span id="userGreetingName"></span></i></span>
+        <div class="row" style="align-items: center;justify-content: space-between;">
+            <span class="h1">Good <span id="userGreetingTime"></span>, <i><span id="userGreetingName"></span></i></span>
+            <div class="saveStatus" onclick="openDataWindow()">
+                <span class="h3" style="font-size:10px;"></span>
+                <div class="saveStatusIndicator"></div>
+            </div>
+        </div>
         <span class="seperator"></span>
     </section>
     <section style="padding:20px 40px 0px 40px;">
