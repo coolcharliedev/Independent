@@ -22,6 +22,28 @@
     <div id="pageLoader">
         <div class="loader"></div>
     </div>
+    <div id="editDetails" style="display:none;">
+        <div class="outlinedbox limwi minwi" style="display:flex;flex-flow:column;">
+            <div class="row" style="align-items: center;justify-content: space-between;">
+                <span class="h2">Edit protocol details</span>
+                <span class="h2 clickable" onclick="this.parentElement.parentElement.parentElement.style.display = 'none'" style="display:flex;align-items: center;text-decoration: none;"><span class="material-symbols-outlined">close</span></span>
+            </div>
+            <div class="col" style="margin-top:10px;">
+                <span class="h3">Protocol Name</span>
+                <input type="text" id="protocolName">
+            </div>
+            <div class="col" style="margin-top:10px;">
+                <span class="h3">Protocol Colour</span>
+                <div id="colourList">
+
+                </div>
+            </div>
+            <div class="buttonrow" style="margin-top:10px;justify-content: space-between;">
+                <button class="danger" onclick="deleteProtocol()">Delete protocol</button>
+                <button onclick="submitProtocolEdits()">Confirm</button>
+            </div>
+        </div>
+    </div>
     <section style="padding:40px 40px 0px 40px;width:100%;">
         <div class="row" style="align-items: center;justify-content: start;gap:5px;">
             <div class="dashButton" onclick="location = './../'">

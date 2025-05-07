@@ -111,6 +111,7 @@ async function userAlert(style,info){
 }
 
 async function deleteMainLoader(){
+    if(!document.getElementById("pageLoader")) return
     document.getElementById("pageLoader").remove()
 }
 
@@ -374,7 +375,7 @@ async function setupProtocols(){
 }
 
 async function getProtocolOpen(){
-    index = window.localStorage.getItem('openProfileIndex')
+    index = window.localStorage.getItem('openProtocolIndex')
 
     profile = await getProfile()
 
@@ -391,7 +392,7 @@ async function openProtocol(index){
 
     profile = await getProfile()
 
-    window.localStorage.setItem('openProfileIndex', index)
+    window.localStorage.setItem('openProtocolIndex', index)
 
     location = "./protocol"
 }
@@ -400,13 +401,13 @@ async function editProtocol(index){
 
     profile = await getProfile()
 
-    window.localStorage.setItem('editProfileIndex', index)
+    window.localStorage.setItem('editProtocolIndex', index)
 
     location = "./edit"
 }
 
 async function getProtocolEdit(){
-    index = window.localStorage.getItem('editProfileIndex')
+    index = window.localStorage.getItem('editProtocolIndex')
 
     console.log(index)
 
@@ -419,7 +420,7 @@ async function getProtocolEdit(){
 
 async function newStage(){
     profile = await getProfile()
-    index = window.localStorage.getItem('editProfileIndex')
+    index = window.localStorage.getItem('editProtocolIndex')
 
     protocol.stages.push({title:"New stage",body:"Description",skippable:false})
 
@@ -514,7 +515,7 @@ async function displayProtocolEditorStages(){
 
 async function stageEdit(action, sindex){
     profile = await getProfile()
-    index = window.localStorage.getItem('editProfileIndex')
+    index = window.localStorage.getItem('editProtocolIndex')
 
     if(action == "delete"){
         protocol.stages.splice((sindex-1),1)
@@ -535,6 +536,68 @@ async function stageEdit(action, sindex){
     }
 
     
+}
+
+async function submitProtocolEdits(){
+    tempprotocol = {
+        title: document.getElementById('protocolName').value,
+        color: JSON.parse(window.localStorage.getItem('selectedColour'))
+    }
+
+    if(!protocol.title || !protocol.color) return userAlert('DANGER', "Invalid field values")
+
+    profile = await getProfile()
+    index = window.localStorage.getItem('editProtocolIndex')
+
+    protocol.title = tempprotocol.title
+    protocol.color = tempprotocol.color
+
+    profile.data.protocols.protocols[index] = protocol
+
+    await setProfile(profile)
+
+    document.getElementById('editDetails').style.display = "none"
+
+    setupProtocolEditor()
+}
+
+async function deleteProtocol(){
+    profile = await getProfile()
+
+    if(!confirm("This cannot be undone. Delete?")) return
+
+    profile.data.protocols.protocols.splice(localStorage.getItem("editProtocolIndex"),1)
+
+    await userAlert("SUCCESS", "Protocol deleted")
+
+    await setProfile(profile)
+
+    location = "./../"
+}
+
+async function protocolEditorDetails(){
+    protocol = await getProtocolEdit()
+
+    document.getElementById('protocolName').value = protocol.title
+    window.localStorage.setItem('selectedColour', JSON.stringify(protocol.color))
+    document.getElementById('colourList').innerHTML = ""
+    
+    i = 0
+    while(i<colours.length){
+        newColour = document.createElement("div")
+        newColour.classList.add("colourPreview")
+        newColour.style.background = `linear-gradient(180deg,rgba(${colours[i][0]-25}, ${colours[i][1]-25}, ${colours[i][2]-25}) 0%, rgba(${colours[i][0]+20}, ${colours[i][1]+20}, ${colours[i][2]+20}) 100%)`
+
+        newColour.setAttribute('onclick', `setColour("${JSON.stringify(colours[i])}", this)`)
+        document.getElementById('colourList').appendChild(newColour)
+
+        if(JSON.stringify(protocol.color) == JSON.stringify(colours[i])){
+            newColour.classList.add('selected')
+        }
+        i++
+    }
+
+    document.getElementById('editDetails').style.display = 'flex'
 }
 
 async function setupProtocolEditor(){
@@ -562,6 +625,7 @@ async function setColour(colour, element){
 }
 
 async function openNewProtocol(){
+    document.getElementById('protocolName').value = ""
     window.localStorage.removeItem('selectedColour')
     document.getElementById('colourList').innerHTML = ""
     

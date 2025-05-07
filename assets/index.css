@@ -211,7 +211,7 @@ input{
     background-color: var(--main-bg-color);
 }
 
-#newProtocol{
+#newProtocol, #editDetails{
     width:100vw;
     display:none;
     height:100vh;
