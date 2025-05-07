@@ -334,10 +334,13 @@ async function setupProtocols(){
     i = 0
     while(i<protocols.length){
         protocolListed = document.createElement("div")
+        console.log(i)
         protocolListed.addEventListener('click', e => {
             e.stopPropagation()
-            openProtocol(i+1)
+            console.log(i)
+            
         })
+        protocolListed.setAttribute('onclick',`openProtocol(${i})`)
         protocolListed.classList.add('protocolListed')
         protocolListed.style.background = `linear-gradient(180deg,rgba(${protocols[i].color[0]-25}, ${protocols[i].color[1]-25}, ${protocols[i].color[2]-25}, 1) 0%, rgba(${protocols[i].color[0]+20}, ${protocols[i].color[1]+20}, ${protocols[i].color[2]+20}, 1) 100%)`
 
@@ -355,8 +358,8 @@ async function setupProtocols(){
         icon.innerHTML = `<img src="./../../assets/icons/edit-icon.svg">`
         icon.addEventListener('click', e => {
             e.stopPropagation()
-            editProtocol(i+1)
         })
+        icon.setAttribute('onclick',`editProtocol(${i})`)
 
         headerRow.appendChild(title)
         headerRow.appendChild(icon)
@@ -366,6 +369,40 @@ async function setupProtocols(){
         list.appendChild(protocolListed)
         i++
     }
+
+    deleteMainLoader()
+}
+
+async function getProtocolOpen(){
+    index = window.localStorage.getItem('openProfileIndex')
+
+    profile = await getProfile()
+
+    return profile.data.protocols.protocols[i]
+}
+
+async function setupProtocolOpen(){
+    deleteMainLoader()
+    protocol = await getProtocolOpen()
+    document.getElementById('protocolOpenTitle').innerHTML = protocol.title
+}
+
+async function openProtocol(index){
+
+    profile = await getProfile()
+
+    window.localStorage.setItem('openProfileIndex', index)
+
+    location = "./protocol"
+}
+
+async function editProtocol(index){
+
+    profile = await getProfile()
+
+    window.localStorage.setItem('openProfileIndex', index)
+
+    location = "./edit"
 }
 
 async function setColour(colour, element){
