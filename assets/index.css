@@ -242,6 +242,7 @@ input{
     gap:10px;
     z-index:10;
     padding-top:10px;
+    
 }
 
 .closeIcon{
@@ -278,6 +279,50 @@ input{
     font-family: "Lato", sans-serif;
     font-weight: 400;
     font-style: normal;
+
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.protocolStage{
+    background-color: var(--secondary-bg);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.protocolEditBar{
+    background-color: var(--tertiary-bg);
+    display:flex;
+    flex-flow:row;
+    padding:10px;
+    align-items: center;
+    gap:10px;
+}
+
+.protocolEditBar > div.clickableIcon:hover{
+    opacity:0.8;
+}
+
+.checkBox{
+    align-items: center;
+    gap:5px;
+    margin-left:10px;
+}
+
+.checkBox > input{
+    height:20px;
+    width:20px;
+    padding:5px;
+}
+
+.protocolContent{
+    padding:20px;
+}
+.rearrangeMark{
+    display:block;
+    height:6px;
+    background-color: var(--secondary);
+    width:100%;
 }
 
 .colourPreview{
@@ -358,6 +403,22 @@ input{
 }
 
 .editButton:hover{
+    cursor: pointer;
+    background-color: var(--tertiary-bg);
+}
+
+.clickableIcon{
+    height:35px;
+    width:35px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius:50%;
+    transition:0.2s;
+    background-color:transparent;
+}
+
+.clickableIcon:hover{
     cursor: pointer;
     background-color: var(--tertiary-bg);
 }

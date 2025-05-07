@@ -400,9 +400,24 @@ async function editProtocol(index){
 
     profile = await getProfile()
 
-    window.localStorage.setItem('openProfileIndex', index)
+    window.localStorage.setItem('editProfileIndex', index)
 
     location = "./edit"
+}
+
+async function getProtocolEdit(){
+    index = window.localStorage.getItem('editProfileIndex')
+
+    profile = await getProfile()
+
+    return profile.data.protocols.protocols[i]
+}
+
+async function setupProtocolEditor(){
+
+    protocol = await getProtocolEdit()
+
+    document.getElementById('protocolEditorTitle').innerHTML = protocol.title
 }
 
 async function setColour(colour, element){

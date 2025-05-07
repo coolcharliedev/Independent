@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./../../../assets/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close" />
+    <link rel="icon" type="image/x-icon" href="./../../../assets/icons/protocols-icon.png">
+    <style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        </style>
+    <title>Independent</title>
+</head>
+<body>
+    <div id="alertOverlay"></div>
+    <div id="pageLoader">
+        <div class="loader"></div>
+    </div>
+    <section style="padding:40px 40px 0px 40px;width:100%;">
+        <div class="row" style="align-items: center;justify-content: start;gap:5px;">
+            <div class="dashButton" onclick="location = './../'">
+                <img src="./../../../assets/icons/back-icon.svg">
+            </div>
+            <div class="row" style="justify-content: space-between;width:100%;">
+                <span class="h1" id="protocolEditorTitle"></span>
+                <div class="dashButton" onclick="protocolEditorDetails()">
+                    <img src="./../../../assets/icons/edit-icon.svg">
+                </div>
+            </div>
+        </div>
+        <span class="seperator"></span>
+    </section>
+    <section style="padding:20px 40px 0px 40px;width:100%;">
+        <div class="row">
+            <div class="clickableIcon">
+                <img src="./../../../assets/icons/add-icon.svg">
+            </div>
+        </div>
+    </section>
+    <section style="padding:20px 40px 0px 40px;width:100%;">
+        <div class="col">
+            <div class="protocolStage">
+                <div class="protocolEditBar">
+                    <div class="clickableIcon">
+                        <img src="./../../../assets/icons/delete-icon.svg">
+                    </div>
+                    <div class="clickableIcon">
+                        <img src="./../../../assets/icons/order-icon.svg">
+                    </div>
+                    <div class="row checkBox">
+                        <input type="checkbox">
+                        <span class="h3">Allow skipping</span>
+                    </div>
+                </div>
+                <div class="protocolContent">
+                    <span class="h2">Test test test</span>
+                    <p>Testing testing testing testing</p>
+                </div>
+            </div>
+            <div class="rearrangeMark"></div>
+        </div>
+    </section>
+    <script src="./../../../assets/main.js"></script>
+    <script>deleteMainLoader();setupProtocolEditor();loadAlerts()</script>
+</body>
+</html>
