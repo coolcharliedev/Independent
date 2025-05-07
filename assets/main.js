@@ -408,9 +408,133 @@ async function editProtocol(index){
 async function getProtocolEdit(){
     index = window.localStorage.getItem('editProfileIndex')
 
+    console.log(index)
+
     profile = await getProfile()
 
-    return profile.data.protocols.protocols[i]
+    console.log(profile)
+
+    return profile.data.protocols.protocols[index]
+}
+
+async function newStage(){
+    profile = await getProfile()
+    index = window.localStorage.getItem('editProfileIndex')
+
+    protocol.stages.push({title:"New stage",body:"Description",skippable:false})
+
+    profile.data.protocols.protocols[index] = protocol
+
+    await setProfile(profile)
+
+    await displayProtocolEditorStages()
+}
+
+async function displayProtocolEditorStages(){
+    document.getElementById('stages').innerHTML = ""
+    console.log('test')
+    protocol = await getProtocolEdit()
+
+    console.log(protocol)
+
+    stages = protocol.stages
+    /*stages = [
+        {
+            title: "BG Check",
+            body: "Your BG must be at or above 6.0 before sleeping and must have an arrow that projects your BG will remain the same or go higher",
+            skippable: true,
+        }
+    ]*/
+
+    i = 0
+    while(i<stages.length){
+        newstagediv = document.createElement("div")
+        newstagediv.classList.add('protocolStage')
+
+        newbar = document.createElement("div")
+        newbar.classList.add('protocolEditBar')
+        newstagediv.appendChild(newbar)
+
+        iconcont1 = document.createElement("div")
+        iconcont1.classList.add('clickableIcon')
+
+        iconcont1.setAttribute('onclick', `stageEdit('delete',${i+1})`)
+        newbar.appendChild(iconcont1)
+
+        icon1 = document.createElement("img")
+        icon1.src = "./../../../assets/icons/delete-icon.svg"
+        iconcont1.appendChild(icon1)
+
+        iconcont2 = document.createElement("div")
+        iconcont2.classList.add('clickableIcon')
+
+        iconcont2.setAttribute('onclick',  `stageEdit('reorder',${i+1})`)
+        newbar.appendChild(iconcont2)
+
+        icon2 = document.createElement("img")
+        icon2.src = "./../../../assets/icons/order-icon.svg"
+        iconcont2.appendChild(icon2)
+
+        checkboxcont = document.createElement("div")
+        checkboxcont.classList.add('checkBox')
+        newbar.appendChild(checkboxcont)
+
+        input = document.createElement("input")
+        input.setAttribute("type","checkbox")
+
+        if(stages[i].skippable)input.checked=true
+        input.setAttribute('oninput',  `stageEdit('edit',${i+1})`)
+        checkboxcont.appendChild(input)
+
+        span = document.createElement("span")
+        span.classList.add("h3")
+        checkboxcont.appendChild(span)
+        span.innerHTML = "Allow skipping"
+
+        content = document.createElement("div")
+        content.classList.add("protocolContent")
+        newstagediv.appendChild(content)
+
+        title = document.createElement("input")
+        title.classList.add("h2")
+        title.value=stages[i].title
+        title.setAttribute('oninput',  `stageEdit('edit',${i+1})`)
+        content.appendChild(title)
+
+        body = document.createElement("textarea")
+        body.value=stages[i].body
+        body.setAttribute('oninput',  `stageEdit('edit',${i+1})`)
+        content.appendChild(body)
+
+        document.getElementById('stages').appendChild(newstagediv)
+        i++
+    }
+
+}
+
+async function stageEdit(action, sindex){
+    profile = await getProfile()
+    index = window.localStorage.getItem('editProfileIndex')
+
+    if(action == "delete"){
+        protocol.stages.splice((sindex-1),1)
+
+        profile.data.protocols.protocols[index] = protocol
+
+        await setProfile(profile)
+
+        await displayProtocolEditorStages()
+    }else if(action == "edit"){
+        protocol.stages[sindex-1].title = document.getElementById('stages').children[sindex-1].children[1].children[0].value
+        protocol.stages[sindex-1].body = document.getElementById('stages').children[sindex-1].children[1].children[1].value
+        protocol.stages[sindex-1].skippable = document.getElementById('stages').children[sindex-1].children[0].children[2].children[0].checked
+
+        profile.data.protocols.protocols[index] = protocol
+
+        await setProfile(profile)
+    }
+
+    
 }
 
 async function setupProtocolEditor(){
@@ -418,6 +542,9 @@ async function setupProtocolEditor(){
     protocol = await getProtocolEdit()
 
     document.getElementById('protocolEditorTitle').innerHTML = protocol.title
+
+    await displayProtocolEditorStages()
+    deleteMainLoader()
 }
 
 async function setColour(colour, element){

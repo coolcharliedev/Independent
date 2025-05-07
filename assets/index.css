@@ -307,6 +307,8 @@ input{
     align-items: center;
     gap:5px;
     margin-left:10px;
+    display:flex;
+    flex-flow:row;
 }
 
 .checkBox > input{
@@ -315,8 +317,25 @@ input{
     padding:5px;
 }
 
+textarea{
+    background-color: var(--tertiary-bg);
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    border:none;
+    font-size:1em;
+    outline:none;
+    border-radius:3px;
+    resize: vertical;
+    color:var(--main-cnt-color);
+    padding:10px;
+}
+
 .protocolContent{
     padding:20px;
+    display:flex;
+    flex-flow:column;
+    gap:10px;
 }
 .rearrangeMark{
     display:block;

@@ -38,35 +38,15 @@
     </section>
     <section style="padding:20px 40px 0px 40px;width:100%;">
         <div class="row">
-            <div class="clickableIcon">
+            <div class="clickableIcon" onclick="newStage()">
                 <img src="./../../../assets/icons/add-icon.svg">
             </div>
         </div>
     </section>
     <section style="padding:20px 40px 0px 40px;width:100%;">
-        <div class="col">
-            <div class="protocolStage">
-                <div class="protocolEditBar">
-                    <div class="clickableIcon">
-                        <img src="./../../../assets/icons/delete-icon.svg">
-                    </div>
-                    <div class="clickableIcon">
-                        <img src="./../../../assets/icons/order-icon.svg">
-                    </div>
-                    <div class="row checkBox">
-                        <input type="checkbox">
-                        <span class="h3">Allow skipping</span>
-                    </div>
-                </div>
-                <div class="protocolContent">
-                    <span class="h2">Test test test</span>
-                    <p>Testing testing testing testing</p>
-                </div>
-            </div>
-            <div class="rearrangeMark"></div>
-        </div>
+        <div class="col" style="gap:10px;" id="stages"></div>
     </section>
     <script src="./../../../assets/main.js"></script>
-    <script>deleteMainLoader();setupProtocolEditor();loadAlerts()</script>
+    <script>setupProtocolEditor();loadAlerts()</script>
 </body>
 </html>
