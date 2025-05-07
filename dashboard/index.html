@@ -18,8 +18,9 @@
     <title>Independent</title>
 </head>
 <body>
+    <div id="alertOverlay"></div>
     <div id="dataSaveWindow">
-        <div class="outlinedbox limwi minwi" style="display:flex;flex-flow:column;" id="initial">
+        <div class="outlinedbox limwi minwi" style="display:flex;flex-flow:column;">
             <div class="row" style="align-items: center;justify-content: space-between;">
                 <span class="h2">Profile Backup</span>
                 <span class="h2 clickable" onclick="this.parentElement.parentElement.parentElement.style.display = 'none'" style="display:flex;align-items: center;text-decoration: none;"><span class="material-symbols-outlined">close</span></span>
@@ -41,7 +42,7 @@
     <section style="padding:40px 40px 0px 40px;width:100%;">
         <div class="row" style="align-items: center;justify-content: space-between;">
             <span class="h1">Good <span id="userGreetingTime"></span>, <i><span id="userGreetingName"></span></i></span>
-            <div class="saveStatus" onclick="openDataWindow()">
+            <div class="saveStatus" onclick="openDataWindow()" tabindex="0">
                 <span class="h3" style="font-size:10px;"></span>
                 <div class="saveStatusIndicator"></div>
             </div>
@@ -54,9 +55,9 @@
     </section>
     <section style="padding:20px 40px 0px 40px;">
         <span class="h2">Tools</span>
-        <div class="col" id="toolList" style="gap:10px;"></div>
+        <div class="icongrid" id="toolList"></div>
     </section>
     <script src="./../assets/main.js"></script>
-    <script>setupDash()</script>
+    <script>setupDash();loadAlerts()</script>
 </body>
 </html>

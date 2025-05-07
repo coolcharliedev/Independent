@@ -29,6 +29,7 @@ async function criticalError(error){
 }
 
 async function newProfile(username, profilename){
+    if(!username || !profilename) return userAlert("DANGER", "Invalid field values")
     profile = {
         username: username,
         name: profilename,
@@ -98,7 +99,15 @@ async function uploadProfile(){
 
 
 async function userAlert(style,info){
-    console.warn(info)
+    alerts = window.localStorage.getItem('alerts') || '[]'
+
+    alerts = JSON.parse(alerts)
+
+    alerts.push({style:style,text:info})
+
+    window.localStorage.setItem('alerts', JSON.stringify(alerts))
+
+    await loadAlerts()
 }
 
 async function deleteMainLoader(){
@@ -117,7 +126,25 @@ const tools = [
         name:"Learning",
         url:"learning",
         desc: "Track your progress in learning programmable courses"
-    }
+    },
+    {
+        icon:"calendar.png",
+        name:"Calendar",
+        url:"calendar",
+        desc: "Create, edit, and track events, tasks, and day conditions"
+    },
+    {
+        icon:"programclock.png",
+        name:"Program Clock",
+        url:"programclock",
+        desc: "Keep track of timed events in a sequence"
+    },
+    {
+        icon:"settings.png",
+        name:"Settings",
+        url:"settings",
+        desc: "Customize your Independent experience"
+    },
 ]
 
 async function setupDash(){
@@ -150,7 +177,7 @@ async function setupDash(){
         newtool = document.createElement("div")
         newtool.setAttribute("tabindex","0")
         newtool.classList.add("toollisted")
-        newtool.classList.add("limwi")
+        //newtool.classList.add("limwi")
         
 
         newicon = document.createElement("img")
@@ -163,14 +190,14 @@ async function setupDash(){
         infobar.classList.add("col")
 
         tooltitle = document.createElement("span")
-        tooltitle.classList.add("h2")
+        tooltitle.classList.add("h3")
         tooltitle.innerHTML = tools[i].name
 
         tooldesc = document.createElement("p")
         tooldesc.innerHTML = tools[i].desc
 
         infobar.appendChild(tooltitle)
-        infobar.appendChild(tooldesc)
+        //infobar.appendChild(tooldesc)
 
         newtool.appendChild(newicon)
         newtool.appendChild(infobar)
@@ -199,6 +226,178 @@ async function displayBackupStatus(){
         document.getElementsByClassName("saveStatus")[0].children[1].classList.add('saved')
     }
     return
+}
+
+async function deleteAlert(index){
+    index = index-1
+
+    alerts = window.localStorage.getItem('alerts') || '[]'
+
+    alerts = JSON.parse(alerts)
+
+    alerts.splice(index,1)
+
+    window.localStorage.setItem('alerts', JSON.stringify(alerts))
+
+    await loadAlerts()
+}
+
+async function loadAlerts(){
+    alerts = window.localStorage.getItem('alerts') || '[]'
+
+    alerts = JSON.parse(alerts)
+
+    overlay = document.getElementById("alertOverlay")
+
+    overlay.innerHTML = ""
+
+    i = 0
+    while(i<alerts.length){
+        newAlert = document.createElement("div")
+        newAlert.classList.add("alert")
+
+        closeIcon = document.createElement("div")
+        closeIcon.classList.add('closeIcon')
+
+        closeIcon.setAttribute('onclick', `deleteAlert(${i+1})`)
+        
+        closeIconIm = document.createElement("img")
+        closeIconIm.style.height = "20px"
+        closeIconIm.style.color = "rgb(59, 128, 255)"
+        closeIconIm.setAttribute("src","./../../assets/icons/close-icon.svg")
+
+        closeIcon.appendChild(closeIconIm)
+
+        alertText = document.createElement("span")
+        alertText.innerHTML = alerts[i].text
+        alertText.style.margin = "1px 0px 0px 0px"
+
+        newAlert.appendChild(closeIcon)
+        newAlert.appendChild(alertText)
+        overlay.appendChild(newAlert)
+        i++
+    }
+}
+
+async function createProtocol(){
+    protocol = {
+        title: document.getElementById('protocolName').value,
+        color: JSON.parse(window.localStorage.getItem('selectedColour'))
+    }
+
+    if(!protocol.title || !protocol.color) return userAlert('DANGER', "Invalid field values")
+
+    profile = await getProfile()
+
+    protocol.stages = []
+
+    profile.data.protocols.protocols.push(protocol)
+
+    await setProfile(profile)
+
+    setupProtocols()
+
+    document.getElementById('newProtocol').style.display = "none"
+}
+
+const colours = [
+    [235,95,95],
+    [235,145,60],
+    [235,190,65],
+    [120,235,65],
+    [90,150,235],
+    [135, 50, 235],
+    [160, 160, 160],
+    [64, 64, 64]
+]
+
+async function setupProtocols(){
+    list = document.getElementById('protocolList')
+
+    list.innerHTML = ""
+
+    profile = await getProfile()
+
+    if(!profile.data["protocols"]){
+        profile.data.protocols = {
+            protocols:[]
+        }
+
+        await setProfile(profile)
+    }
+
+    protocols = profile.data.protocols.protocols
+
+    //protocols = [{title:"test",color:[90, 150, 235]}]
+
+
+    i = 0
+    while(i<protocols.length){
+        protocolListed = document.createElement("div")
+        protocolListed.addEventListener('click', e => {
+            e.stopPropagation()
+            openProtocol(i+1)
+        })
+        protocolListed.classList.add('protocolListed')
+        protocolListed.style.background = `linear-gradient(180deg,rgba(${protocols[i].color[0]-25}, ${protocols[i].color[1]-25}, ${protocols[i].color[2]-25}, 1) 0%, rgba(${protocols[i].color[0]+20}, ${protocols[i].color[1]+20}, ${protocols[i].color[2]+20}, 1) 100%)`
+
+        headerRow = document.createElement("div")
+        headerRow.classList.add("row")
+        headerRow.style.alignItems = "Center"
+        headerRow.style.justifyContent = "space-between"
+
+        title = document.createElement("span")
+        title.classList.add("h2")
+        title.innerHTML = protocols[i].title
+
+        icon = document.createElement("div")
+        icon.classList.add("editButton")
+        icon.innerHTML = `<img src="./../../assets/icons/edit-icon.svg">`
+        icon.addEventListener('click', e => {
+            e.stopPropagation()
+            editProtocol(i+1)
+        })
+
+        headerRow.appendChild(title)
+        headerRow.appendChild(icon)
+
+        protocolListed.appendChild(headerRow)
+
+        list.appendChild(protocolListed)
+        i++
+    }
+}
+
+async function setColour(colour, element){
+    list = document.getElementById('colourList').children
+
+    i = 0
+    while(i<list.length){
+        list[i].classList.remove("selected")
+        i++
+    }
+
+    element.classList.add('selected')
+
+    window.localStorage.setItem('selectedColour',colour)
+}
+
+async function openNewProtocol(){
+    window.localStorage.removeItem('selectedColour')
+    document.getElementById('colourList').innerHTML = ""
+    
+    i = 0
+    while(i<colours.length){
+        newColour = document.createElement("div")
+        newColour.classList.add("colourPreview")
+        newColour.style.background = `linear-gradient(180deg,rgba(${colours[i][0]-25}, ${colours[i][1]-25}, ${colours[i][2]-25}) 0%, rgba(${colours[i][0]+20}, ${colours[i][1]+20}, ${colours[i][2]+20}) 100%)`
+
+        newColour.setAttribute('onclick', `setColour("${JSON.stringify(colours[i])}", this)`)
+        document.getElementById('colourList').appendChild(newColour)
+        i++
+    }
+
+    document.getElementById('newProtocol').style.display = 'flex'
 }
 
 async function loadProfile(){
