@@ -379,13 +379,116 @@ async function getProtocolOpen(){
 
     profile = await getProfile()
 
-    return profile.data.protocols.protocols[i]
+    return profile.data.protocols.protocols[index]
 }
 
 async function setupProtocolOpen(){
+    i=window.localStorage.getItem('openProtocolIndex')
+    protocols = (await getProfile()).data.protocols.protocols
+
+    instructionArea.style.background =`linear-gradient(180deg,rgba(${protocols[i].color[0]-25-40}, ${protocols[i].color[1]-25-40}, ${protocols[i].color[2]-25-40}, 1) 0%, rgba(${protocols[i].color[0]+20-40}, ${protocols[i].color[1]+20-40}, ${protocols[i].color[2]+20-40}, 1) 100%)`
+    
+    document.getElementById('protocolProgressBarProgress').style.background =`linear-gradient(180deg,rgba(${protocols[i].color[0]-25}, ${protocols[i].color[1]-25}, ${protocols[i].color[2]-25}, 1) 0%, rgba(${protocols[i].color[0]+20}, ${protocols[i].color[1]+20}, ${protocols[i].color[2]+20}, 1) 100%)`
     deleteMainLoader()
     protocol = await getProtocolOpen()
     document.getElementById('protocolOpenTitle').innerHTML = protocol.title
+    first = protocol.stages.shift()
+
+    openProtocol = {
+        previous:[],
+        queue:protocol.stages,
+        current:first
+    }
+
+    window.localStorage.setItem("openProtocol", JSON.stringify(openProtocol))
+
+    openStage(first)
+}
+
+async function openStage(stage){
+    openProtocol = window.localStorage.getItem('openProtocol')
+
+    if(!openProtocol){
+        openProtocol = {
+            previous:[],
+            queue:[],
+            current:null
+        }
+    }else{
+        openProtocol = JSON.parse(openProtocol)
+    }
+
+    document.getElementById('previous').style.display = "block"
+    document.getElementById('next').style.display = "block"
+    document.getElementById('next').innerHTML = "Next"
+    document.getElementById('revisit').style.display = "block"
+    document.getElementById('skip').style.display = "block"
+
+    if(openProtocol.previous.length == 0){
+        document.getElementById('previous').style.display = "none"
+    }
+
+    if(!openProtocol.current.skippable){
+        document.getElementById('skip').style.display = "none"
+    }
+
+    if(openProtocol.current.synchronous){
+        document.getElementById('revisit').style.display = "none"
+    }
+
+    if(openProtocol.queue.length == 0){
+        document.getElementById('next').innerHTML = "Exit"
+    }
+
+    document.getElementById('stageTitle').innerHTML = openProtocol.current.title
+    document.getElementById('stageDesc').innerHTML = openProtocol.current.body
+
+    document.getElementById('protocolProgressBarProgress').style.width = (((openProtocol.previous.length)/(openProtocol.queue.length+openProtocol.previous.length))*100)+"%"
+    
+}
+
+async function protocolStageAction(action){
+    openProtocol = window.localStorage.getItem('openProtocol')
+
+    if(!openProtocol){
+        openProtocol = {
+            previous:[],
+            queue:[],
+            current:null,
+        }
+    }else{
+        openProtocol = JSON.parse(openProtocol)
+    }
+    
+    if(action == "previous"){
+        openProtocol.queue.push(openProtocol.current)
+        openProtocol.current = openProtocol.previous[openProtocol.previous.length-1]
+        openProtocol.previous.splice(openProtocol.previous.length-1,1)
+
+        window.localStorage.setItem('openProtocol',JSON.stringify(openProtocol))
+
+        await openStage(openProtocol.current)
+    }else if(action == "skip"){
+    }else if(action == "revisit"){
+        openProtocol.current.complete = false
+        openProtocol.queue.push(openProtocol.current)
+        openProtocol.current = openProtocol.queue[0]
+        openProtocol.queue.splice(0,1)
+        window.localStorage.setItem('openProtocol',JSON.stringify(openProtocol))
+
+        await openStage(openProtocol.current)
+    }else if(action == "next"){
+        if(openProtocol.queue.length==0)return location = "./../"
+        openProtocol.current.complete = true
+        openProtocol.previous.push(openProtocol.current)
+        openProtocol.current = openProtocol.queue[0]
+        openProtocol.queue.shift(0,1)
+        window.localStorage.setItem('openProtocol',JSON.stringify(openProtocol))
+
+        await openStage(openProtocol.current)
+    }
+    
+    
 }
 
 async function openProtocol(index){
@@ -422,7 +525,7 @@ async function newStage(){
     profile = await getProfile()
     index = window.localStorage.getItem('editProtocolIndex')
 
-    protocol.stages.push({title:"New stage",body:"Description",skippable:false})
+    protocol.stages.push({title:"New stage",body:"Description",skippable:false,synchronous:false})
 
     profile.data.protocols.protocols[index] = protocol
 
@@ -492,6 +595,23 @@ async function displayProtocolEditorStages(){
         checkboxcont.appendChild(span)
         span.innerHTML = "Allow skipping"
 
+        //
+        checkboxcont = document.createElement("div")
+        checkboxcont.classList.add('checkBox')
+        newbar.appendChild(checkboxcont)
+
+        input = document.createElement("input")
+        input.setAttribute("type","checkbox")
+
+        if(stages[i].synchronous)input.checked=true
+        input.setAttribute('oninput',  `stageEdit('edit',${i+1})`)
+        checkboxcont.appendChild(input)
+
+        span = document.createElement("span")
+        span.classList.add("h3")
+        checkboxcont.appendChild(span)
+        span.innerHTML = "Synchronous"
+
         content = document.createElement("div")
         content.classList.add("protocolContent")
         newstagediv.appendChild(content)
@@ -529,6 +649,7 @@ async function stageEdit(action, sindex){
         protocol.stages[sindex-1].title = document.getElementById('stages').children[sindex-1].children[1].children[0].value
         protocol.stages[sindex-1].body = document.getElementById('stages').children[sindex-1].children[1].children[1].value
         protocol.stages[sindex-1].skippable = document.getElementById('stages').children[sindex-1].children[0].children[2].children[0].checked
+        protocol.stages[sindex-1].synchronous = document.getElementById('stages').children[sindex-1].children[0].children[3].children[0].checked
 
         profile.data.protocols.protocols[index] = protocol
 

@@ -31,23 +31,12 @@
         </div>
         <span class="seperator"></span>
     </section>
-    <div id="instructionArea">
-        <span class="h2" id="stageTitle" style="align-items: center;"></span>
-        <span class="h3" id="stageDesc" style="align-items: center;"></span>
-    </div>
-    <div style="margin:10px 40px 10px 40px">
-        <div id="protocolProgressBar">
-            <div id="protocolProgressBarProgress"></div>
-        </div>
-    </div>
-    
-     <div class="buttonrow" style="margin:10px 40px;justify-content: end;">
+     <div class="buttonrow" style="margin:10px 40px;justify-content: space-between;">
+        <button onclick="protocolStageAction('previous')">Previous</button>
         <div class="buttonrow" style="justify-content: end;">
-
-            <button onclick="protocolStageAction('previous')" id="previous">Previous</button>
-            <button onclick="protocolStageAction('skip')" id="skip">Skip</button>
-            <button onclick="protocolStageAction('revisit')" id="revisit">Revisit</button>
-            <button onclick="protocolStageAction('next')" id="next">Next</button>
+            <button onclick="protocolStageAction('skip')" class="">Skip</button>
+            <button onclick="protocolStageAction('revisit')">Revisit</button>
+            <button onclick="protocolStageAction('next')">Next</button>
         </div>
     </div>
     <script src="./../../../assets/main.js"></script>

@@ -508,3 +508,27 @@ p{
 .saveStatusIndicator.saved{
     background-color: rgb(96, 255, 82);
 }
+
+#instructionArea{
+    margin:10px 40px;
+    display:Flex;
+    flex-flow:column;
+    align-items: center;
+    justify-content: center;
+    border-radius:5px;
+    padding:20px;
+}
+
+#protocolProgressBar{
+    width:100%;
+    background-color: white;
+    padding:5px;
+    border-radius:10px;
+}
+
+#protocolProgressBar > div{
+    padding:5px;
+    border-radius:5px;
+    background-color: rgb(255, 0, 0);
+    transition:0.6s;
+}
