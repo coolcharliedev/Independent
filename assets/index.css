@@ -526,7 +526,23 @@ p{
     border-radius:10px;
 }
 
+.progCont{
+    width:100%;
+    background-color: white;
+    padding:5px;
+    border-radius:10px;
+    display:flex;
+    flex-flow:row;
+}
+
 #protocolProgressBar > div{
+    padding:5px;
+    border-radius:5px;
+    background-color: rgb(255, 0, 0);
+    transition:0.6s;
+}
+
+.progIn{
     padding:5px;
     border-radius:5px;
     background-color: rgb(255, 0, 0);

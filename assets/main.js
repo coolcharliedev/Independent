@@ -146,6 +146,12 @@ const tools = [
         url:"settings",
         desc: "Customize your Independent experience"
     },
+    {
+        icon:"toothalteration.png",
+        name:"Tooth Alteration",
+        url:"tooth",
+        desc: "Manage time spent with and without tooth alterating treatment"
+    },
 ]
 
 async function setupDash(){
@@ -383,12 +389,12 @@ async function getProtocolOpen(){
 }
 
 async function setupProtocolOpen(){
-    i=window.localStorage.getItem('openProtocolIndex')
+    ind=window.localStorage.getItem('openProtocolIndex')
     protocols = (await getProfile()).data.protocols.protocols
 
-    instructionArea.style.background =`linear-gradient(180deg,rgba(${protocols[i].color[0]-25-40}, ${protocols[i].color[1]-25-40}, ${protocols[i].color[2]-25-40}, 1) 0%, rgba(${protocols[i].color[0]+20-40}, ${protocols[i].color[1]+20-40}, ${protocols[i].color[2]+20-40}, 1) 100%)`
+    instructionArea.style.background =`linear-gradient(180deg,rgba(${protocols[ind].color[0]-25-40}, ${protocols[ind].color[1]-25-40}, ${protocols[ind].color[2]-25-40}, 1) 0%, rgba(${protocols[ind].color[0]+20-40}, ${protocols[ind].color[1]+20-40}, ${protocols[ind].color[2]+20-40}, 1) 100%)`
     
-    document.getElementById('protocolProgressBarProgress').style.background =`linear-gradient(180deg,rgba(${protocols[i].color[0]-25}, ${protocols[i].color[1]-25}, ${protocols[i].color[2]-25}, 1) 0%, rgba(${protocols[i].color[0]+20}, ${protocols[i].color[1]+20}, ${protocols[i].color[2]+20}, 1) 100%)`
+    document.getElementById('protocolProgressBarProgress').style.background =`linear-gradient(180deg,rgba(${protocols[ind].color[0]-25}, ${protocols[ind].color[1]-25}, ${protocols[ind].color[2]-25}, 1) 0%, rgba(${protocols[ind].color[0]+20}, ${protocols[ind].color[1]+20}, ${protocols[ind].color[2]+20}, 1) 100%)`
     deleteMainLoader()
     protocol = await getProtocolOpen()
     document.getElementById('protocolOpenTitle').innerHTML = protocol.title
@@ -911,4 +917,64 @@ async function setupLanding(){
     }else{
         location = "./dashboard"
     }
+}
+
+async function daystamp(){
+    date = (new Date())
+
+    return `${date.getYear()}/${date.getMonth()}/${date.getDate()}`
+}
+
+function millisecondsToHMS(milliseconds) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  // Pad with leading zeros if needed
+  const hDisplay = String(hours).padStart(2, '0');
+  const mDisplay = String(minutes).padStart(2, '0');
+  const sDisplay = String(seconds).padStart(2, '0');
+
+  return `${hDisplay}:${mDisplay}:${sDisplay}`;
+}
+
+async function setupToothAlt(){
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    profile = await getProfile()
+    date = (new Date())
+
+    if(!profile.data["toothalt"]){
+        profile.data.toothalt = {
+            days:{}
+        }
+
+        await setProfile(profile)
+    }
+
+    document.getElementById('date').innerHTML = `${months[date.getMonth()]} ${date.getDate()}, ${1900+date.getYear()}`
+
+    if(!profile.data.toothalt.days[await daystamp()]){
+        profile.data.toothalt.days[await daystamp()] = {history:[]}
+    }
+
+    todayHis = profile.data.toothalt.days[await daystamp()].history
+
+    totaltimeout = 0
+    i = 0
+    while(i<profile.data.toothalt.days[await daystamp()].history.length){
+        totaltimeout+=((profile.data.toothalt.days[await daystamp()].history[i].timein-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+        i++
+    }
+
+    totaltimeout = 1200000
+
+    totaltime = 1000*60*60*2
+
+    document.getElementById('dayTotalBarProg').style.width = (((totaltimeout/totaltime)*100)+"%")
+
+
+    document.getElementById('timein').innerHTML = millisecondsToHMS(totaltimeout)
+    document.getElementById('timeout').innerHTML = `2:00:00`
+    deleteMainLoader()
 }

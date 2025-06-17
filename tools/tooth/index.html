@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./../../assets/index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close" />
+    <link rel="icon" type="image/x-icon" href="./../../assets/icons/toothalteration-icon.png">
+    <style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        </style>
+    <title>Independent</title>
+</head>
+<body>
+    <div id="alertOverlay"></div>
+    <div id="pageLoader">
+        <div class="loader"></div>
+    </div>
+    <section style="padding:40px 40px 0px 40px;width:100%;">
+        <div class="row" style="align-items: center;justify-content: start;gap:5px;">
+            <div class="dashButton" onclick="location = './../../dashboard'">
+                <img src="./../../assets/icons/dash-icon.svg">
+            </div>
+            <span class="h1">Tooth Alteration</span>
+        </div>
+        <span class="seperator"></span>
+    </section>
+    <section style="padding:20px 40px 20px 40px">
+        <span class="h2" id="date">Date</span>
+        <div class="progCont" style="border-radius:10px 10px 0px 0px;margin-top:20px;">
+            <div class="progIn" id="dayTotalBarProg" style="position:absolute;background-color: rgb(228, 0, 0);"></div>
+            <div class="progIn" style="background-color:rgb(0, 197, 0);width:100%;"></div>
+        </div>
+        <div style="border-radius:0px 0px 10px 10px;background-color:white;display:flex;flex-flow:row;padding:20px;justify-content: space-between;">
+            <span class="h2" style="color:rgb(228, 0, 0);" id="timein">time in</span>
+            <span class="h2" style="color:rgb(0, 197, 0);" id="timeout">time out</span>
+        </div>
+    </section>
+    <script src="./../../assets/main.js"></script>
+    <script>setupToothAlt()</script>
+</body>
+</html>
