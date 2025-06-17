@@ -33,13 +33,28 @@
     </section>
     <section style="padding:20px 40px 20px 40px">
         <span class="h2" id="date">Date</span>
-        <div class="progCont" style="border-radius:10px 10px 0px 0px;margin-top:20px;">
-            <div class="progIn" id="dayTotalBarProg" style="position:absolute;background-color: rgb(228, 0, 0);"></div>
-            <div class="progIn" style="background-color:rgb(0, 197, 0);width:100%;"></div>
+        <div class="progCont" style="border-radius:10px 10px 0px 0px;margin-top:20px;background-color:var(--secondary-bg)">
+            <div class="progIn" id="dayTotalBarProg" style="position:absolute;background-color: rgb(255, 88, 88);"></div>
+            <div class="progIn" style="background-color:rgb(117, 255, 117);width:100%;"></div>
         </div>
-        <div style="border-radius:0px 0px 10px 10px;background-color:white;display:flex;flex-flow:row;padding:20px;justify-content: space-between;">
-            <span class="h2" style="color:rgb(228, 0, 0);" id="timein">time in</span>
-            <span class="h2" style="color:rgb(0, 197, 0);" id="timeout">time out</span>
+        <div style="border-radius:0px 0px 10px 10px;background-color:var(--secondary-bg);display:flex;flex-flow:row;padding:20px;justify-content: space-between;">
+            <span class="h2" style="color:rgb(255, 88, 88);" id="timein">time in</span>
+            <span class="h2" style="color:rgb(117, 255, 117);" id="timeout">time out</span>
+        </div>
+    </section>
+    <section style="padding:0px 40px 20px 40px">
+        <span class="h2">Current Status</span>
+        <div id="algnin" style="border-radius:10px;background-color:var(--secondary-bg);padding:20px;display:none;flex-flow:column;">
+            <span class="h2">Alignment IN</span>
+            <div class="buttonrow">
+                <button onclick="removeAlignment()">Log out</button>
+            </div>
+        </div>
+        <div id="algnout" style="border-radius:10px;background-color:var(--secondary-bg);padding:20px;display:none;flex-flow:column;">
+            <span class="h2">Alignment OUT - <span id="timeoutlabel"></span></span>
+            <div class="buttonrow">
+                <button onclick="insertAlignment()">Log in</button>
+            </div>
         </div>
     </section>
     <script src="./../../assets/main.js"></script>

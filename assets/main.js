@@ -939,6 +939,14 @@ function millisecondsToHMS(milliseconds) {
   return `${hDisplay}:${mDisplay}:${sDisplay}`;
 }
 
+async function setupGraphic(totaltimeout,totaltime){
+    document.getElementById('dayTotalBarProg').style.width = (((totaltimeout/totaltime)*100)+"%")
+
+
+    document.getElementById('timein').innerHTML = millisecondsToHMS(totaltimeout)
+    document.getElementById('timeout').innerHTML = `2:00:00`
+}
+
 async function setupToothAlt(){
     const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     profile = await getProfile()
@@ -961,19 +969,76 @@ async function setupToothAlt(){
     todayHis = profile.data.toothalt.days[await daystamp()].history
 
     totaltimeout = 0
+    currentlyout = false
     i = 0
     while(i<profile.data.toothalt.days[await daystamp()].history.length){
-        totaltimeout+=((profile.data.toothalt.days[await daystamp()].history[i].timein-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+        if(!profile.data.toothalt.days[await daystamp()].history[i].timein){
+            currentlyout = true
+            totaltimeout+=((date.getTime()-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+        }else{
+            totaltimeout+=((profile.data.toothalt.days[await daystamp()].history[i].timein-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+        }
+        
         i++
     }
+
+    console.log(currentlyout)
 
 
     totaltime = 1000*60*60*2
 
-    document.getElementById('dayTotalBarProg').style.width = (((totaltimeout/totaltime)*100)+"%")
+    setupGraphic(totaltimeout,totaltime)
 
+    if(currentlyout){
+        document.getElementById('algnout').style.display = 'flex'
+    }else{
+        document.getElementById('algnin').style.display = 'flex'
+    }
+    await deleteMainLoader()
 
-    document.getElementById('timein').innerHTML = millisecondsToHMS(totaltimeout)
-    document.getElementById('timeout').innerHTML = `2:00:00`
-    deleteMainLoader()
+    iterableAlignPage()
+}
+
+async function iterableAlignPage(){
+    //setupGraphic()
+}
+
+async function removeAlignment(){
+    profile = await getProfile()
+    date = (new Date())
+
+    if(!profile.data["toothalt"]){
+        profile.data.toothalt = {
+            days:{}
+        }
+
+        await setProfile(profile)
+    }
+
+    if(!profile.data.toothalt.days[await daystamp()]){
+        profile.data.toothalt.days[await daystamp()] = {history:[]}
+    }
+
+    profile.data.toothalt.days[await daystamp()].history.push({timeout:(new Date()).getTime()})
+
+    await setProfile(profile)
+
+    document.getElementById('algnout').style.display = 'flex'
+    document.getElementById('algnin').style.display = 'none'
+}
+
+async function insertAlignment(){
+    profile = await getProfile()
+    date = (new Date())
+
+    i = 0
+    while(i<profile.data.toothalt.days[await daystamp()].history.length){
+        profile.data.toothalt.days[await daystamp()].history[profile.data.toothalt.days[await daystamp()].history.length-1].timein = (new Date()).getTime()
+        
+        i++
+    }
+    await setProfile(profile)
+
+    document.getElementById('algnout').style.display = 'none'
+    document.getElementById('algnin').style.display = 'flex'
 }
