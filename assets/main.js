@@ -967,7 +967,6 @@ async function setupToothAlt(){
         i++
     }
 
-    totaltimeout = 1200000
 
     totaltime = 1000*60*60*2
 
