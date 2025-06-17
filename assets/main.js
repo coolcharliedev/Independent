@@ -1000,7 +1000,51 @@ async function setupToothAlt(){
 }
 
 async function iterableAlignPage(){
-    //setupGraphic()
+    profile = await getProfile()
+    date = (new Date())
+
+    if(!profile.data["toothalt"]){
+        profile.data.toothalt = {
+            days:{}
+        }
+
+        await setProfile(profile)
+    }
+
+    if(!profile.data.toothalt.days[await daystamp()]){
+        profile.data.toothalt.days[await daystamp()] = {history:[]}
+    }
+
+    timeout = 0
+    totaltimeout = 0
+    currentlyout = false
+    i=0
+    while(i<profile.data.toothalt.days[await daystamp()].history.length){
+
+        if(!profile.data.toothalt.days[await daystamp()].history[i].timein){
+            timeout+=((date.getTime()-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+            totaltimeout+=((date.getTime()-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+            currentlyout= true
+        }else{
+            totaltimeout+=((profile.data.toothalt.days[await daystamp()].history[i].timein-profile.data.toothalt.days[await daystamp()].history[i].timeout))
+        }
+        
+        i++
+    }
+
+    if(currentlyout){
+        document.getElementById('timeoutlabel').innerHTML = millisecondsToHMS(timeout)
+    }
+    console.log(currentlyout)
+
+
+    totaltime = 1000*60*60*2
+
+    setupGraphic(totaltimeout,totaltime)
+
+    setTimeout(function(){
+        iterableAlignPage()
+    },1000)
 }
 
 async function removeAlignment(){
