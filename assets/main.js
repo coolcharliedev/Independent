@@ -940,11 +940,11 @@ function millisecondsToHMS(milliseconds) {
 }
 
 async function setupGraphic(totaltimeout,totaltime){
-    document.getElementById('dayTotalBarProg').style.width = (((totaltimeout/totaltime)*100)+"%")
+    document.getElementById('dayTotalBarProg').style.width = `calc(${(Math.floor((totaltimeout/totaltime)*100)+"%")} - 90px)`
 
 
     document.getElementById('timein').innerHTML = millisecondsToHMS(totaltimeout)
-    document.getElementById('timeout').innerHTML = `2:00:00`
+    document.getElementById('timeout').innerHTML = millisecondsToHMS(totaltime)
 }
 
 async function setupToothAlt(){
